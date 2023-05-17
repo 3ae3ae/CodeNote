@@ -1,3 +1,6 @@
+/**
+ * 큐
+ */
 class Queue<T = number> {
   protected q: T[];
   protected f: number;
@@ -27,6 +30,12 @@ class Queue<T = number> {
   }
 }
 
+/**
+ * 최소, 최대힙을 만들어주는 함수
+ * @param minMax
+ * @param search 정렬기준함수. sort함수와 같은 양식.
+ * @returns
+ */
 function makeHeap<T = number>(
   minMax: "min" | "max" | "Min" | "Max",
   search?: (a: T) => number
@@ -110,4 +119,36 @@ function makeHeap<T = number>(
     }
   }
   return new Heap();
+}
+
+/**
+ * bfs, dfs용 Visited 클래스
+ */
+class Visited {
+  visited: Map<number, Map<number, number>>;
+  constructor(y?: number, x?: number) {
+    if (y !== undefined && x !== undefined)
+      this.visited = new Map([[y, new Map([[x, 1]])]]);
+    else this.visited = new Map();
+  }
+
+  push(y: number, x: number) {
+    if (this.visited.has(y)) this.visited.get(y)?.set(x, 1);
+    else this.visited.set(y, new Map([[x, 1]]));
+  }
+
+  has(y: number, x: number) {
+    if (this.visited.get(y)?.has(x)) return true;
+    else return false;
+  }
+
+  area() {
+    return [...this.visited.values()].reduce((a, c) => a + c.size, 0);
+  }
+
+  entries() {
+    return [...this.visited.keys()].flatMap((y) =>
+      [...this.visited.get(y)!.keys()].map((x) => [y, x])
+    );
+  }
 }

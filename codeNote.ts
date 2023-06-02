@@ -152,3 +152,86 @@ class Visited {
     );
   }
 }
+
+type matrix = number[][];
+/**
+ * 행렬곱 함수
+ */
+function multiMatrix(mat1: matrix, mat2: matrix): matrix {
+  if (mat1[0].length !== mat2.length) throw new Error("행렬곱 불가");
+  return Array.from({ length: mat1.length }, (_, y) =>
+    new Array(mat2[0].length)
+      .fill(0)
+      .map((__, x) => mat1[y].reduce((a, c, i) => a + c * mat2[i][x], 0))
+  );
+}
+
+/**
+ * 숫자 제곱 함수
+ * @param num 밑
+ * @param n 지수
+ * @returns num**n
+ */
+function fastPow(num: number, n: number): number {
+  const bin = n.toString(2);
+  const pows = Array.from({ length: bin.length }, (_, i) => num ** (i + 1));
+  return [...bin]
+    .reverse()
+    .reduce((a, c, i) => (c === "1" ? a * pows[i] : a), 1);
+}
+
+/**
+ * 피보나치 구하는 함수
+ * @param input 번쨰 피보나치 수
+ * @param mod 나누는 몫
+ */
+function getFibo(input: string, mod: number): Number {
+  const biSame = (a: bigint, b: bigint) => a.toString() === b.toString();
+  const Input = BigInt(input);
+  if (biSame(Input, BigInt(0))) return 0;
+  type matrix = bigint[][];
+
+  function multiMatrix(mat1: matrix, mat2: matrix): matrix {
+    if (mat1[0].length !== mat2.length) throw new Error("행렬곱 불가");
+    return Array.from({ length: mat1.length }, (_, y) =>
+      new Array(mat2[0].length)
+        .fill(0)
+        .map(
+          (__, x) =>
+            mat1[y].reduce((a, c, i) => a + c * mat2[i][x], BigInt(0)) %
+            BigInt(mod)
+        )
+    );
+  }
+  function powMatrix(mat: matrix): matrix {
+    return multiMatrix(mat, mat);
+  }
+  function fastPowMatrix(mat: matrix, n: bigint): matrix {
+    const bin = n.toString(2);
+    const pows = new Array(bin.length).fill(0);
+
+    pows.forEach((x, i, pows) =>
+      i === 0 ? (pows[i] = mat) : (pows[i] = powMatrix(pows[i - 1]))
+    );
+    const unit: matrix = Array.from({ length: mat.length }, () =>
+      new Array(mat.length).fill(BigInt(0))
+    );
+
+    for (let i = 0; i < unit.length; i++) unit[i][i] = BigInt(1);
+
+    return [...bin]
+      .reverse()
+      .reduce((a, c, i) => (c === "1" ? multiMatrix(a, pows[i]) : a), unit);
+  }
+  function getFi(n: bigint): number {
+    const mat1 = [
+      [BigInt(1), BigInt(1)],
+      [BigInt(1), BigInt(0)],
+    ];
+
+    const temp = fastPowMatrix(mat1, n);
+    return Number(temp[0][1]);
+  }
+
+  return getFi(Input) % mod;
+}

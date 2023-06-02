@@ -185,7 +185,7 @@ function fastPow(num: number, n: number): number {
  * @param input 번쨰 피보나치 수
  * @param mod 나누는 몫
  */
-function getFibo(input: string, mod: number): Number {
+function getFibo(input: string, mod: number): number {
   const biSame = (a: bigint, b: bigint) => a.toString() === b.toString();
   const Input = BigInt(input);
   if (biSame(Input, BigInt(0))) return 0;

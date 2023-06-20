@@ -224,7 +224,8 @@ class Matrix {
  */
 function fastPow(num: number, n: number): number {
   const bin = n.toString(2);
-  const pows = Array.from({ length: bin.length }, (_, i) => num ** (i + 1));
+  const pows = [num];
+  for (let i=1; i<bin.length; i++) pows[i] = pows[i-1]**2;
   return [...bin]
     .reverse()
     .reduce((a, c, i) => (c === "1" ? a * pows[i] : a), 1);
